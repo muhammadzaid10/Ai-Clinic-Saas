@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # 1. Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: clinic-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+    # Agar local database container use karna ho to ise uncomment karein (aur backend .env ka MONGO_URI update karein)
+    # depends_on:
+    #   - mongodb
+
+  # 2. Frontend Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: clinic-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80" # Local browser mein http://localhost:3000 kholne ke liye
+    depends_on:
+      - backend
+
+  # 3. Optional: Local MongoDB Service (Agar Atlas ke bajaye local DB chalana ho)
+  # mongodb:
+  #   image: mongo:latest
+  #   container_name: clinic-mongodb
+  #   restart: unless-stopped
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data/db
+
+# volumes:
+#   mongo-data:
