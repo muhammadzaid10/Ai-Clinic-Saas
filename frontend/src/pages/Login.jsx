@@ -15,8 +15,12 @@ const Login = () => {
     setLoading(true);
     try {
       const user = await login(formData.email, formData.password);
-      toast.success(`Welcome back, ${user.name}!`);
-      navigate(`/${user.role}`);
+      if (user && user.role) {
+        toast.success(`Welcome back, ${user.name}!`);
+        navigate(`/${user.role}`);
+      } else {
+        toast.error('Role not defined for this user');
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed');
     } finally {
