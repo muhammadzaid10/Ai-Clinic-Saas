@@ -40,21 +40,15 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// 🔥 Pehle Database connect hoga, phir Server chalega
-const startServer = async () => {
-  try {
-    // 1. Database connection ka intezar karein
-    await connectDB();
-    
-    // 2. Agar DB connect ho jaye, to hi server chalayein
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error(`❌ Server start nahi ho saka kyunke DB fail hogaya: ${error.message}`);
-    process.exit(1); // Project ko band kar do agar DB connect na ho
-  }
-};
+// 🔥 Connect Database
+connectDB();
 
-// Function ko call karein
-startServer();
+// 🔥 Only listen if not running on Vercel (serverless environment)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+  });
+}
+
+// Export the app for Vercel Serverless Functions
+module.exports = app;
