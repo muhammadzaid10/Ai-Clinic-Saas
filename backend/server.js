@@ -18,10 +18,13 @@ if (process.env.NODE_ENV === 'development') {
 
 // Health check
 app.get('/', (req, res) => {
+  const uri = process.env.MONGO_URI || '';
+  const redactedUri = uri.replace(/:([^@]+)@/, ':***@');
   res.json({
     message: '🏥 AI Clinic Management SaaS API',
     status: 'running',
     version: '1.0.0',
+    database: redactedUri || 'none',
   });
 });
 
