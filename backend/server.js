@@ -11,8 +11,21 @@ const app = express();
 
 
 // Middleware - CORS Policy Updated Here 
+const allowedOrigins = [
+  "https://ai-clinic-saas.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-  origin: ["https://ai-clinic-saas.vercel.app"], // frontend link
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, or postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
+    return callback(new Error('The CORS policy for this site does not allow access from the specified Origin.'));
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"]

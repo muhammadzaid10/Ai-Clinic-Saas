@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://ai-clinic-backend-xyz.vercel.app/:path*"
+      "destination": "https://ai-clinic-saas-yvpz.vercel.app/:path*"
     },
     {
       "source": "/(.*)",
