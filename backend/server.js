@@ -7,9 +7,6 @@ const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 
 const app = express();
 
-
-
-
 // Middleware - CORS Policy Updated Here 
 const allowedOrigins = [
   "https://ai-clinic-saas.vercel.app",
@@ -19,7 +16,6 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, or postman)
     if (!origin) return callback(null, true);
     if (allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
       return callback(null, true);
@@ -65,15 +61,27 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// 🔥 Connect Database
-connectDB();
+// 🔥 Modified Section: Connect DB first, then start Server
+const startServer = async () => {
+  try {
+    // 1. Pehle MongoDB connect hoga
+    await connectDB(); 
+    console.log('📝 MongoDB Connection Established.');
 
-// 🔥 Only listen if not running on Vercel (serverless environment)
-if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-  });
-}
+    // 2. Agar Vercel environment nahi hai, toh hi listen karega
+    if (!process.env.VERCEL) {
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+      });
+    }
+  } catch (error) {
+    console.error(`❌ Server start nahi ho saka kyunki DB connection fail hua: ${error.message}`);
+    process.exit(1); // Server ko band kar dega agar DB connect na ho
+  }
+};
+
+// Function ko call karein
+startServer();
 
 // Export the app for Vercel Serverless Functions
 module.exports = app;

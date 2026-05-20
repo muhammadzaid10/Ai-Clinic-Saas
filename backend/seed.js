@@ -22,6 +22,7 @@ const seedAdmin = async () => {
     password: 'admin123',
     role: 'admin',
     subscriptionPlan: 'pro',
+    isActive: true,
   });
 
   // Sample doctor
