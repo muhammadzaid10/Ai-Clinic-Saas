@@ -9,14 +9,13 @@ const seedAdmin = async () => {
   await connectDB();
 
   const adminEmail = 'admin@clinic.com';
-  const existing = await User.findOne({ email: adminEmail });
+  const doctorEmail = 'doctor@clinic.com';
+  const receptionistEmail = 'receptionist@clinic.com';
 
-  if (existing) {
-    console.log('⚠️  Admin already exists — seed skip. Login: admin@clinic.com / admin123');
-    await mongoose.disconnect();
-    process.exit(0);
-  }
+  console.log('🧹 Cleaning old demo users...');
+  await User.deleteMany({ email: { $in: [adminEmail, doctorEmail, receptionistEmail] } });
 
+  console.log('🌱 Creating fresh demo users...');
   const admin = await User.create({
     name: 'Super Admin',
     email: adminEmail,
