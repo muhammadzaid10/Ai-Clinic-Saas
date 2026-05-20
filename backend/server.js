@@ -7,8 +7,17 @@ const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 
 const app = express();
 
-// Middleware
-app.use(cors());
+
+
+
+// Middleware - CORS Policy Updated Here 
+app.use(cors({
+  origin: ["https://ai-clinic-saas.vercel.app"], // frontend link
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"]
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
