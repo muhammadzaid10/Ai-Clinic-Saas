@@ -51,7 +51,7 @@ const PrescriptionForm = ({ patient, appointment, onSuccess, onCancel }) => {
     // At least one valid medicine
     const validMeds = data.medicines.filter((m) => m.name && m.dosage && m.frequency && m.duration);
     if (validMeds.length === 0) {
-      return toast.error('Kam se kam ek complete medicine add karo');
+      return toast.error('Atleast one medicine with all details filled is required');
     }
 
     setLoading(true);
